@@ -1,0 +1,136 @@
+// ---------------- simple calculator------------------------------
+// using stack
+class Stack {
+    constructor() {
+        this.items = [];
+    }
+
+    push(x) {
+        this.items.push(x);
+    }
+
+    pop() {
+        return this.items.pop();
+    }
+
+    peek() {
+        return this.items[this.items.length - 1];
+    }
+
+    isEmpty() {
+        return this.items.length === 0;
+    }
+}
+
+// mathematical operators 
+function isOperator(ch) {
+    return ['+', '-', '*', '/', '%', '^'].includes(ch);
+}
+
+function precedence(op) {    // priority asssignment
+    if (op === '+' || op === '-') return 1;
+    if (op === '*' || op === '/' || op === '%') return 2;
+    if (op === '^') return 3;
+    return 0;
+}
+
+// infix to postfix converter
+function infixToPostfix(infix) {
+    let stack = new Stack();
+    let postfix = "";
+    let number = "";// to handle multi digit no..
+
+    for (let ch of infix) {
+
+        // build multi-digit number
+        if (!isNaN(ch) && ch !== ' ') {
+            number += ch;
+        }
+        else {
+            // to Push completed number
+            if (number.length > 0) {
+                postfix += number + " ";
+                number = "";
+            }
+
+            // for opening bracket
+            if (ch === '(') {
+                stack.push(ch);
+            }
+            // closing bracket
+            else if (ch === ')') {
+                while (!stack.isEmpty() && stack.peek() !== '(') {
+                    postfix += stack.pop() + " ";
+                }
+                stack.pop(); // remove '(' 
+            }
+             // if Operator found
+            else if (isOperator(ch)) {
+                while ( !stack.isEmpty() && precedence(stack.peek()) >= precedence(ch)
+                ) {
+                    postfix += stack.pop() + " ";
+                }
+                stack.push(ch);
+            }
+        }
+    }
+
+    // Push last number
+    if (number.length > 0) {
+        postfix += number + " ";
+    }
+
+    // Pop remaining operators
+    while (!stack.isEmpty()) {
+        postfix += stack.pop() + " ";
+    }
+
+    return postfix.trim();
+}
+
+// apply mathematical operation for character operands
+function applyOperator(op, b, a) {
+    switch (op) {
+        case '+': return a + b;
+        case '-': return a - b;
+        case '*': return a * b;
+        case '/': return a / b;
+        case '%': return a % b;
+        case '^': return Math.pow(a, b);
+    }
+}
+
+// postfix evaluaton
+function evaluatePostfix(postfix) {
+    let stack = new Stack();
+    let tokens = postfix.split(" ");
+
+    for (let token of tokens) {
+        // Operand
+        if (!isNaN(token)) {
+            stack.push(Number(token));
+        }
+        // Operator
+        else {
+            let b = stack.pop();
+            let a = stack.pop();
+            let result = applyOperator(token, b, a);
+            stack.push(result);
+        }
+    }
+
+    return stack.pop();
+}
+
+//  Function 
+function calculate(expression) {
+    let postfix = infixToPostfix(expression);
+    console.log("Postfix:", postfix);
+    return evaluatePostfix(postfix);
+}
+
+//simple algebric expression
+console.log(calculate("(10+2)*3"));
+console.log(calculate("12+34"));
+console.log(calculate("100/(5+5)"));
+console.log(calculate("5^2+30"));
