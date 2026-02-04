@@ -1,0 +1,34 @@
+Q1. Program to add two number provided by a user
+   code:
+      a=float(input("enter first number:"))
+      b=float(input("enter second number:"))
+
+      print("sum = ",a+b)  
+
+ output:enter first number:23.24
+        enter second number:42.5342
+        sum =  65.7742
+Q2.write a program to swap a number
+  i)(No Third Variable) 
+  code:
+  a=2
+  b=9
+  print("before swapping: a = ",a," , b = ",b)
+
+  a=a+b
+  b=a-b
+  a=a-b
+  print("after swapping: a = ",a," , b = ",b)
+
+  ii) (using Third Variable)
+  code:
+   a=2
+   b=9
+   print("before swapping: a = ",a," , b = ",b)
+
+   c=a
+   a=b
+   b=c
+   print("after swapping: a = ",a," , b = ",b)
+
+Q3.     
